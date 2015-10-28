@@ -1,61 +1,72 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CS271.Automorphisms.Console
 {
     public class Program
     {
-        private static List<char[]> permsList; 
-
         public static void Main(string[] args)
         {
-            permsList = new List<char[]>();
-            const string input = "1234567";
-            char[] inputChars = input.ToCharArray();
-            GetPermutations(inputChars);
-            permsList.ForEach(System.Console.WriteLine);
+            System.Console.WriteLine("UWW CS271 Automorphism Finder v1.0");
+            string input = CollectInput();
+
+            string[] items = input.Split(',');
+            Permutations permutations = new Permutations();
+            List<List<string>> results = permutations.GeneratePermutations(items.ToList());
+            WritePermutations(results);
+
+            // Now that we have the Permutations, let's check for the automorphisms
+
+            
+            // Force console to remain open
             System.Console.ReadLine();
         }
 
-        private static void Swap(ref char a, ref char b)
+        /// <summary>
+        /// Attempts to collect a valid input from the User, handling empty, invalid, and exit values.
+        /// </summary>
+        /// <returns>String representing the User's validated input.</returns>
+        public static string CollectInput()
         {
-            if (a == b)
+            // Ask for the list
+            System.Console.Write("Enter a comma-delimited list: ");
+            // Collect the input
+            string input = System.Console.ReadLine();
+            // Remove all whitespace from input if not null or empty
+            input = !string.IsNullOrEmpty(input) ? input.Replace(" ", "") : input;
+
+            // Handle null, empty, exit, and invalid inputs
+            if (string.IsNullOrEmpty(input))
             {
-                return;
+                System.Console.WriteLine("ERROR: You must provide a list...");
+                CollectInput();
+            }
+            else if (input.ToLower() == "exit")
+            {
+                Environment.Exit(0);
+            }
+            else if (!input.Contains(','))
+            {
+                System.Console.WriteLine("ERROR: List must be comma-delimited...");
+                CollectInput();
             }
 
-            a ^= b;
-            b ^= a;
-            a ^= b;
+            // Return the input
+            return input;
         }
 
-        public static void GetPermutations(char[] list)
+        /// <summary>
+        /// Writes all permutations in the specified collection to the Console.
+        /// </summary>
+        /// <param name="results">The list of permutations (as a list of strings) to write.</param>
+        public static void WritePermutations(List<List<string>> results)
         {
-            // Set x to the length of the char list - 1
-            int x = list.Length - 1;
-            // Run GetPermutations
-            GetPermutations(list, 0, x);
-        }
-
-        private static void GetPermutations(char[] list, int k, int m)
-        {
-            // If k == m, add to the perms list, otherwise swap k and i, re-run, then swap again
-            if (k == m)
+            foreach (List<string> combination in results)
             {
-                permsList.Add(list);
+                System.Console.WriteLine(string.Join("", combination));
             }
-            else
-            {
-                // Loop through all characters
-                for (int i = k; i <= m; i++)
-                {
-                    // Swap k and i
-                    Swap(ref list[k], ref list[i]);
-                    // Recursively run with k stepped by 1
-                    GetPermutations(list, k + 1, m);
-                    // Swap k and i again
-                    Swap(ref list[k], ref list[i]);
-                }
-            }
+            System.Console.WriteLine(Environment.NewLine + "Number of Permutations: " + results.Count);
         }
     }
 }
