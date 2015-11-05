@@ -32,9 +32,50 @@ namespace CS271.Automorphisms.Console
             System.Console.ReadLine();
         }
 
+        /// <summary>
+        /// Specifies whether the provided permutation is an automorphism of the specified origin set.
+        /// </summary>
+        /// <param name="origin">The original set.</param>
+        /// <param name="permutation">The permutation derived from the origin.</param>
+        /// <returns>Boolean specifying whether the permutation is an automorphism.</returns>
         private static bool IsAutomorphism(ref List<List<string>> origin, List<string> permutation)
         {
-            return true;
+            throw new NotImplementedException();
+        }
+
+        private List<List<List<string>>> PermutationToSetOf3(List<string> permutation)
+        {
+            Permutations permHelper = new Permutations();
+            List<List<string>> originMembers = permHelper.PermutationAs3SetsOf3();
+            List<List<List<string>>> resultingMembers = new List<List<List<string>>>();
+            resultingMembers.Add(originMembers);
+            for (int i = 0; i < originMembers.Count; i++)
+            {
+                List<List<string>> nonIs = originMembers.Where(x => x != originMembers[i]).ToList();
+                List<List<string>> memberPermutations = permHelper.GeneratePermutations(originMembers[i]);
+                foreach (List<string> memberPerm in memberPermutations)
+                {
+                    List<List<string>> thisMembers = new List<List<string>>(3);
+                    if (i == 0)
+                    {
+                        thisMembers.Insert(0, memberPerm);
+                        thisMembers.AddRange(nonIs);
+                    } else if (i == 1)
+                    {
+                        thisMembers.Add(nonIs.First());
+                        thisMembers.Add(memberPerm);
+                        thisMembers.Add(nonIs[2]);
+                    }
+                    else
+                    {
+                        thisMembers.AddRange(nonIs);
+                        thisMembers.Add(memberPerm);
+                    }
+                    resultingMembers.Add(thisMembers);
+                }
+            }
+
+            return resultingMembers;
         }
 
         /// <summary>
@@ -83,6 +124,10 @@ namespace CS271.Automorphisms.Console
             System.Console.WriteLine(Environment.NewLine + "Number of Permutations: " + results.Count);
         }
 
+        /// <summary>
+        /// Writes all cycles in the specified collection to the Console.
+        /// </summary>
+        /// <param name="cycles">The list of cycles as strings to write.</param>
         private static void WriteCycles(IReadOnlyCollection<string> cycles)
         {
             foreach (string cycle in cycles)

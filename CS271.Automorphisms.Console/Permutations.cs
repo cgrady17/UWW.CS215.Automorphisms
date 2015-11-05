@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
@@ -80,9 +81,29 @@ namespace CS271.Automorphisms.Console
             }
         }
 
+        /// <summary>
+        /// Converts the specified permutation to it's respective cycle notation as a single string.
+        /// </summary>
+        /// <param name="permutation">The permutation to convert to cycle notation.</param>
+        /// <returns>String representing the cycle notation of the specified permutation.</returns>
         public string ToCycleNotation(List<string> permutation)
         {
-            return "";
+            throw new NotImplementedException();
+        }
+
+        public List<List<string>> PermutationAs3SetsOf3()
+        {
+            string[] members = new string[3]
+            {
+                "1,2,3",
+                "3,4,5",
+                "5,6,7"
+            };
+
+            List<List<string>> permMembers =
+                members.Select(member => member.Split(',')).Select(digits => digits.ToList()).ToList();
+
+            return permMembers;
         }
     }
 
