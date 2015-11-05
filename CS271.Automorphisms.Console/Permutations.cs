@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using System.Text;
 
 namespace CS271.Automorphisms.Console
 {
@@ -38,9 +41,12 @@ namespace CS271.Automorphisms.Console
         /// <typeparam name="T">The type of the items collection.</typeparam>
         /// <param name="items">The set from which to generate permutations.</param>
         /// <param name="inSelection">Collection of booleans.</param>
-        /// <param name="currentPermutation">Collection of the already generated permutations, if any.</param>
+        /// <param name="currentPermutation">The current permutations</param>
         /// <param name="results">The collection into which each permutation is loaded.</param>
         /// <param name="nextPosition">The next position in the temporary permutations collection.</param>
+        /// <remarks>
+        /// Keep in mind, all permutations are themselves a collection of T.
+        /// </remarks>
         private static void PermuteItems<T>(IReadOnlyList<T> items, IList<bool> inSelection, IList<T> currentPermutation, ICollection<List<T>> results,
             int nextPosition)
         {
@@ -73,5 +79,113 @@ namespace CS271.Automorphisms.Console
                 }
             }
         }
+
+        public string ToCycleNotation(List<string> permutation)
+        {
+            return "";
+        }
     }
+
+    public static class FanoPlane
+    {
+        public static List<List<string>> GenerateCollection()
+        {
+            string[] members = new string[7]
+            {
+                "1,2,3",
+                "1,5,4",
+                "1,6,7",
+                "2,5,7",
+                "2,4,6",
+                "3,5,6",
+                "3,4,7"
+            };
+
+            List<List<string>> fanoMembers = members.Select(member => member.Split(',')).Select(digits => digits.ToList()).ToList();
+
+            return fanoMembers;
+        } 
+    }
+
+    //public static class PermutationExtensions
+    //{
+    //    private static string ToCycleNotation(this IReadOnlyList<string> permutation, IReadOnlyList<string> originalPermutation)
+    //    {
+    //        var mapping = new Dictionary<int, string>();
+
+    //        for(int i = 0; i < originalPermutation.Count; i++)
+    //        {
+    //            mapping.Add(i, originalPermutation[i]);
+    //        }
+
+    //        List<HashSet<string>> cycles = new List<HashSet<string>>();
+    //        HashSet<string> cycle = new HashSet<string>();
+
+    //        string key = null;
+    //        int keyInt = 0;
+    //        int index = 0;
+
+    //        while (mapping.Count != 0)
+    //        {
+    //            if (key == null)
+    //            {
+    //                if (cycles.Count != 0)
+    //                {
+    //                    cycles.Add(cycle);
+    //                }
+
+    //                cycle = new HashSet<string>();
+    //                mapping.Keys.GetEnumerator().MoveNext();
+    //                key = mapping.Values.GetEnumerator().Current;
+    //                keyInt = mapping.Keys.GetEnumerator().Current;
+    //            }
+    //            else
+    //            {
+    //                key = permutation[index];
+    //                mapping.Remove(keyInt);
+    //                if (!cycle.Add(key) || index == null)
+    //                {
+    //                    key = null;
+    //                }
+    //            }
+
+
+    //        }
+
+    //        if (cycle.Count != 0)
+    //        {
+    //            cycles.Add(cycle);
+    //        }
+
+    //        return ToCycles(cycles);
+    //    }
+
+    //    private static string ToCycles(IEnumerable<IEnumerable<string>> collections)
+    //    {
+    //        StringBuilder sb = new StringBuilder();
+
+    //        foreach (IEnumerable<string> collection in collections)
+    //        {
+    //            sb.Append(ToCycle(collection));
+    //        }
+
+    //        return sb.ToString();
+    //    }
+
+    //    private static string ToCycle(IEnumerable<string> collection)
+    //    {
+    //        StringBuilder sb = new StringBuilder("(");
+    //        string separator = "";
+
+    //        foreach (string s in collection)
+    //        {
+    //            sb.Append(separator).Append(s);
+    //            separator = " ";
+    //        }
+
+    //        sb.Append(")");
+
+    //        return sb.ToString();
+    //    }
+    //}
 }

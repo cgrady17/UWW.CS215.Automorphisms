@@ -16,18 +16,32 @@ namespace CS271.Automorphisms.Console
             List<List<string>> results = permutations.GeneratePermutations(items.ToList());
             WritePermutations(results);
 
-            // Now that we have the Permutations, let's check for the automorphisms
+            // Create FanoPlane Collection
+            List<List<string>> fanoPlaneList = FanoPlane.GenerateCollection();
 
-            
+            // Now that we have the Permutations, let's check for the automorphisms
+            List<List<string>> automorphisms = results.Where(permutation => IsAutomorphism(ref fanoPlaneList, permutation)).ToList();
+
+            // Convert to Cycle Notation
+            List<string> automorphicCycles = automorphisms.Select(x => permutations.ToCycleNotation(x)).ToList();
+
+            // Write cycles to the Console
+            WriteCycles(automorphicCycles);
+
             // Force console to remain open
             System.Console.ReadLine();
+        }
+
+        private static bool IsAutomorphism(ref List<List<string>> origin, List<string> permutation)
+        {
+            return true;
         }
 
         /// <summary>
         /// Attempts to collect a valid input from the User, handling empty, invalid, and exit values.
         /// </summary>
         /// <returns>String representing the User's validated input.</returns>
-        public static string CollectInput()
+        private static string CollectInput()
         {
             // Ask for the list
             System.Console.Write("Enter a comma-delimited list: ");
@@ -60,13 +74,23 @@ namespace CS271.Automorphisms.Console
         /// Writes all permutations in the specified collection to the Console.
         /// </summary>
         /// <param name="results">The list of permutations (as a list of strings) to write.</param>
-        public static void WritePermutations(List<List<string>> results)
+        private static void WritePermutations(IReadOnlyCollection<List<string>> results)
         {
-            foreach (List<string> combination in results)
+            foreach (List<string> permutation in results)
             {
-                System.Console.WriteLine(string.Join("", combination));
+                System.Console.WriteLine(string.Join("", permutation));
             }
             System.Console.WriteLine(Environment.NewLine + "Number of Permutations: " + results.Count);
+        }
+
+        private static void WriteCycles(IReadOnlyCollection<string> cycles)
+        {
+            foreach (string cycle in cycles)
+            {
+                System.Console.WriteLine(cycle);
+            }
+
+            System.Console.WriteLine(Environment.NewLine + "Number of Cycles: " + cycles.Count);
         }
     }
 }
