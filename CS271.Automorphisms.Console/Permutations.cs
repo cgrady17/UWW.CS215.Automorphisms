@@ -84,11 +84,19 @@ namespace CS271.Automorphisms.Console
         /// <summary>
         /// Converts the specified permutation to it's respective cycle notation as a single string.
         /// </summary>
+        /// <param name="origin">The origin permutation against which to generate cycle notation.</param>
         /// <param name="permutation">The permutation to convert to cycle notation.</param>
         /// <returns>String representing the cycle notation of the specified permutation.</returns>
-        public string ToCycleNotation(List<string> permutation)
+        public string ToCycleNotation(List<string> origin, List<string> permutation)
         {
-            throw new NotImplementedException();
+            StringBuilder cycleStringBuilder = new StringBuilder("(");
+
+            // Generate Cycles and append to cycleStringBuilder
+            
+
+            cycleStringBuilder.Append(")");
+
+            return cycleStringBuilder.ToString();
         }
 
         public List<List<string>> PermToSetsOfThree(List<string> permutation)

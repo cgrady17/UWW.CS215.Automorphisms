@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace CS271.Automorphisms.Console
 {
@@ -15,74 +14,68 @@ namespace CS271.Automorphisms.Console
             string[] items = input.Split(',');
             Permutations permutations = new Permutations();
             List<List<string>> results = permutations.GeneratePermutations(items.ToList());
-            WritePermutations(results);
-
-            // Create FanoPlane Collection
-            List<List<string>> fanoPlaneList = FanoPlane.GenerateCollection();
+            //WritePermutations(results);
 
             // Now that we have the Permutations, let's check for the automorphisms
-            List<List<string>> automorphisms = results.Where(permutation => IsAutomorphism(ref fanoPlaneList, permutation)).ToList();
+            List<List<string>> automorphisms = results.Where(IsAutomorphism).ToList();
 
-            automorphisms.ForEach(x => System.Console.WriteLine(string.Join("", x)));
+            //System.Console.WriteLine();
+            //automorphisms.ForEach(x => System.Console.WriteLine(string.Join("", x)));
+            //System.Console.WriteLine();
 
-            System.Console.WriteLine("Number of Automorphisms: " + automorphisms.Count);
+            //System.Console.WriteLine("Number of Automorphisms: " + automorphisms.Count);
 
             // Convert to Cycle Notation
-            //List<string> automorphicCycles = automorphisms.Select(x => permutations.ToCycleNotation(x)).ToList();
+            List<string> automorphicCycles = automorphisms.Select(perm => permutations.ToCycleNotation(results.FirstOrDefault(), perm)).ToList();
 
             // Write cycles to the Console
-            //WriteCycles(automorphicCycles);
+            WriteCycles(automorphicCycles);
 
             // Force console to remain open
             System.Console.ReadLine();
         }
 
         /// <summary>
-        /// Specifies whether the provided permutation is an automorphism of the specified origin set.
+        /// Specifies whether the provided permutation is an automorphism of the Fano Plane Permutations.
         /// </summary>
-        /// <param name="origin">The original set.</param>
-        /// <param name="permutation">The permutation derived from the origin.</param>
+        /// <param name="permutation">The permutation derived to check.</param>
         /// <returns>Boolean specifying whether the permutation is an automorphism.</returns>
-        private static bool IsAutomorphism(ref List<List<string>> origin, List<string> permutation)
+        private static bool IsAutomorphism(List<string> permutation)
         {
             Permutations permutations = new Permutations();
             List<List<string>> permAsSetOf3 = permutations.PermToSetsOfThree(permutation);
             // Now the permutation is in {1,2,3},{3,4,5},{5,6,7} format
             List<List<List<string>>> fanoPlanePerm = FanoPlane.FanoOriginPermutation();
-            List<List<string>> firstFanoPerm = fanoPlanePerm[0];
 
-            foreach (List<List<string>> fanoPerm in fanoPlanePerm)
+            foreach (List<List<string>> fanoPerm in fanoPlanePerm) // For each Fano Perm
             {
-                bool memberMatch = false;
-                for (int i = 0; i < 3; i++)
+                bool membersMatch = false;
+                for (int i = 0; i < 3; i++) // For each Member in Perms
                 {
-                    
                     // Loop of each of 3 members
                     List<string> fanoMember = fanoPerm[i];
                     List<string> permMember = permAsSetOf3[i];
-                    bool charMatch = true;
-                    for (int j = 0; j < 3; j++)
+                    bool charsMatch = true;
+                    for (int j = 0; j < 3; j++) // For each character in Members
                     {
                         // Loop of each character in member
                         if (!fanoMember.Contains(permMember[j]))
                         {
-                            charMatch = false;
+                            charsMatch = false;
                         }
                     }
 
-                    memberMatch = charMatch;
+                    membersMatch = charsMatch;
                 }
-                if (memberMatch)
+
+                if (membersMatch)
                 {
                     return true;
                 }
-                
             }
 
             return false;
         }
-
-        
 
         /// <summary>
         /// Attempts to collect a valid input from the User, handling empty, invalid, and exit values.
