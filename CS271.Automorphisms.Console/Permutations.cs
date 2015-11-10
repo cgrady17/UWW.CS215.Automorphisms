@@ -91,20 +91,37 @@ namespace CS271.Automorphisms.Console
             throw new NotImplementedException();
         }
 
-        public List<List<string>> PermutationAs3SetsOf3()
+        public List<List<string>> PermToSetsOfThree(List<string> permutation)
         {
-            string[] members = new string[3]
-            {
-                "1,2,3",
-                "3,4,5",
-                "5,6,7"
-            };
+            if (permutation == null) throw new ArgumentNullException(nameof(permutation));
+            if (permutation.Count < 7) throw new ArgumentException("Permutation length must be exactly 7 characters.", nameof(permutation));
 
-            List<List<string>> permMembers =
-                members.Select(member => member.Split(',')).Select(digits => digits.ToList()).ToList();
+            List<List<string>> permMembers = new List<List<string>>();
+
+            for (int i = 0; i < 3; i++)
+            {
+                List<string> memberChars = new List<string>();
+                switch (i)
+                {
+                    case 0:
+                        memberChars.AddRange(permutation.Take(3).ToList());
+                        break;
+                    case 1:
+                        memberChars.Add(permutation[2]);
+                        memberChars.Add(permutation[3]);
+                        memberChars.Add(permutation[4]);
+                        break;
+                    default:
+                        memberChars.Add(permutation[4]);
+                        memberChars.Add(permutation[5]);
+                        memberChars.Add(permutation[6]);
+                        break;
+                }
+                permMembers.Add(memberChars);
+            }
 
             return permMembers;
-        }
+        }  
     }
 
     public static class FanoPlane
@@ -125,7 +142,57 @@ namespace CS271.Automorphisms.Console
             List<List<string>> fanoMembers = members.Select(member => member.Split(',')).Select(digits => digits.ToList()).ToList();
 
             return fanoMembers;
-        } 
+        }
+
+        public static List<List<List<string>>> FanoOriginPermutation()
+        {
+            Permutations permutations = new Permutations();
+            List<List<string>> originMembers = PermutationAs3SetsOf3();
+            List<List<List<string>>> resultingMembers = new List<List<List<string>>>();
+            for (int i = 0; i < originMembers.Count; i++)
+            {
+                List<List<string>> nonIs = originMembers.Where(x => x != originMembers[i]).ToList();
+                List<List<string>> memberPermutations = permutations.GeneratePermutations(originMembers[i]);
+                foreach (List<string> memberPerm in memberPermutations)
+                {
+                    List<List<string>> thisMembers = new List<List<string>>(3);
+                    switch (i)
+                    {
+                        case 0:
+                            thisMembers.Insert(0, memberPerm);
+                            thisMembers.AddRange(nonIs);
+                            break;
+                        case 1:
+                            thisMembers.Add(nonIs.First());
+                            thisMembers.Add(memberPerm);
+                            thisMembers.Add(nonIs[1]);
+                            break;
+                        default:
+                            thisMembers.AddRange(nonIs);
+                            thisMembers.Add(memberPerm);
+                            break;
+                    }
+                    resultingMembers.Add(thisMembers);
+                }
+            }
+
+            return resultingMembers;
+        }
+
+        public static List<List<string>> PermutationAs3SetsOf3()
+        {
+            string[] members = new string[3]
+            {
+                "1,2,3",
+                "3,4,5",
+                "5,6,7"
+            };
+
+            List<List<string>> permMembers =
+                members.Select(member => member.Split(',')).Select(digits => digits.ToList()).ToList();
+
+            return permMembers;
+        }
     }
 
     //public static class PermutationExtensions

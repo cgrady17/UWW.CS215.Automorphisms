@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CS271.Automorphisms.Console
 {
@@ -22,11 +23,15 @@ namespace CS271.Automorphisms.Console
             // Now that we have the Permutations, let's check for the automorphisms
             List<List<string>> automorphisms = results.Where(permutation => IsAutomorphism(ref fanoPlaneList, permutation)).ToList();
 
+            automorphisms.ForEach(x => System.Console.WriteLine(string.Join("", x)));
+
+            System.Console.WriteLine("Number of Automorphisms: " + automorphisms.Count);
+
             // Convert to Cycle Notation
-            List<string> automorphicCycles = automorphisms.Select(x => permutations.ToCycleNotation(x)).ToList();
+            //List<string> automorphicCycles = automorphisms.Select(x => permutations.ToCycleNotation(x)).ToList();
 
             // Write cycles to the Console
-            WriteCycles(automorphicCycles);
+            //WriteCycles(automorphicCycles);
 
             // Force console to remain open
             System.Console.ReadLine();
@@ -40,43 +45,44 @@ namespace CS271.Automorphisms.Console
         /// <returns>Boolean specifying whether the permutation is an automorphism.</returns>
         private static bool IsAutomorphism(ref List<List<string>> origin, List<string> permutation)
         {
-            throw new NotImplementedException();
-        }
+            Permutations permutations = new Permutations();
+            List<List<string>> permAsSetOf3 = permutations.PermToSetsOfThree(permutation);
+            // Now the permutation is in {1,2,3},{3,4,5},{5,6,7} format
+            List<List<List<string>>> fanoPlanePerm = FanoPlane.FanoOriginPermutation();
+            List<List<string>> firstFanoPerm = fanoPlanePerm[0];
 
-        private List<List<List<string>>> PermutationToSetOf3(List<string> permutation)
-        {
-            Permutations permHelper = new Permutations();
-            List<List<string>> originMembers = permHelper.PermutationAs3SetsOf3();
-            List<List<List<string>>> resultingMembers = new List<List<List<string>>>();
-            resultingMembers.Add(originMembers);
-            for (int i = 0; i < originMembers.Count; i++)
+            foreach (List<List<string>> fanoPerm in fanoPlanePerm)
             {
-                List<List<string>> nonIs = originMembers.Where(x => x != originMembers[i]).ToList();
-                List<List<string>> memberPermutations = permHelper.GeneratePermutations(originMembers[i]);
-                foreach (List<string> memberPerm in memberPermutations)
+                bool memberMatch = false;
+                for (int i = 0; i < 3; i++)
                 {
-                    List<List<string>> thisMembers = new List<List<string>>(3);
-                    if (i == 0)
+                    
+                    // Loop of each of 3 members
+                    List<string> fanoMember = fanoPerm[i];
+                    List<string> permMember = permAsSetOf3[i];
+                    bool charMatch = true;
+                    for (int j = 0; j < 3; j++)
                     {
-                        thisMembers.Insert(0, memberPerm);
-                        thisMembers.AddRange(nonIs);
-                    } else if (i == 1)
-                    {
-                        thisMembers.Add(nonIs.First());
-                        thisMembers.Add(memberPerm);
-                        thisMembers.Add(nonIs[2]);
+                        // Loop of each character in member
+                        if (!fanoMember.Contains(permMember[j]))
+                        {
+                            charMatch = false;
+                        }
                     }
-                    else
-                    {
-                        thisMembers.AddRange(nonIs);
-                        thisMembers.Add(memberPerm);
-                    }
-                    resultingMembers.Add(thisMembers);
+
+                    memberMatch = charMatch;
                 }
+                if (memberMatch)
+                {
+                    return true;
+                }
+                
             }
 
-            return resultingMembers;
+            return false;
         }
+
+        
 
         /// <summary>
         /// Attempts to collect a valid input from the User, handling empty, invalid, and exit values.
