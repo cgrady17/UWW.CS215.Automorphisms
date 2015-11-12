@@ -7,8 +7,8 @@
     <ProjectGuid>{680D8E6D-7758-4309-B721-371D841407F1}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CS271.Automorphisms.Console</RootNamespace>
-    <AssemblyName>CS271.Automorphisms.Console</AssemblyName>
+    <RootNamespace>UWW.CS215.Automorphisms.Console</RootNamespace>
+    <AssemblyName>UWW.CS215.Automorphisms.Console</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

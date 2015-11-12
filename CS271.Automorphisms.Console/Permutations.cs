@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
-namespace CS271.Automorphisms.Console
+namespace UWW.CS215.Automorphisms.Console
 {
     /// <summary>
     /// Library of methods for generating permutations from a set.
@@ -23,7 +21,7 @@ namespace CS271.Automorphisms.Console
             // Instantiate array of T
             T[] currentPermutation = new T[items.Count];
 
-            // Instantiate array of booleans used to specify whether 
+            // Instantiate array of booleans used to specify whether
             // the current permutation is in the selection already
             bool[] inSelection = new bool[items.Count];
 
@@ -89,117 +87,103 @@ namespace CS271.Automorphisms.Console
         /// <returns>String representing the cycle notation of the specified permutation.</returns>
         public string ToCycleNotation(List<string> origin, List<string> permutation)
         {
+            //throw new NotImplementedException();
+
             StringBuilder cycleStringBuilder = new StringBuilder("(");
 
             // Generate Cycles and append to cycleStringBuilder
-            
+            cycleStringBuilder.Append(string.Join("", permutation));
 
             cycleStringBuilder.Append(")");
 
             return cycleStringBuilder.ToString();
         }
 
-        public List<List<string>> PermToSetsOfThree(List<string> permutation)
+        /// <summary>
+        /// Converts the permutation into a set of seven 3-member groups.
+        /// </summary>
+        /// <param name="permutation">The permutation to convert.</param>
+        /// <returns>List of a List of string.</returns>
+        public List<List<string>> PermTo7SetsOf3(List<string> permutation)
         {
             if (permutation == null) throw new ArgumentNullException(nameof(permutation));
             if (permutation.Count < 7) throw new ArgumentException("Permutation length must be exactly 7 characters.", nameof(permutation));
 
-            List<List<string>> permMembers = new List<List<string>>();
-
-            for (int i = 0; i < 3; i++)
+            List<List<string>> permGroups = new List<List<string>>(7)
             {
-                List<string> memberChars = new List<string>();
-                switch (i)
+                new List<string>(3)
                 {
-                    case 0:
-                        memberChars.AddRange(permutation.Take(3).ToList());
-                        break;
-                    case 1:
-                        memberChars.Add(permutation[2]);
-                        memberChars.Add(permutation[3]);
-                        memberChars.Add(permutation[4]);
-                        break;
-                    default:
-                        memberChars.Add(permutation[4]);
-                        memberChars.Add(permutation[5]);
-                        memberChars.Add(permutation[6]);
-                        break;
+                    permutation[0],
+                    permutation[1],
+                    permutation[2]
+                },
+                new List<string>(3)
+                {
+                    permutation[0],
+                    permutation[3],
+                    permutation[4]
+                },
+                new List<string>(3)
+                {
+                    permutation[0],
+                    permutation[5],
+                    permutation[6]
+                },
+                new List<string>(3)
+                {
+                    permutation[1],
+                    permutation[3],
+                    permutation[5]
+                },
+                new List<string>(3)
+                {
+                    permutation[1],
+                    permutation[4],
+                    permutation[6]
+                },
+                new List<string>(3)
+                {
+                    permutation[2],
+                    permutation[3],
+                    permutation[6]
+                },
+                new List<string>(3)
+                {
+                    permutation[2],
+                    permutation[4],
+                    permutation[5]
                 }
-                permMembers.Add(memberChars);
-            }
+            };
 
-            return permMembers;
-        }  
+            return permGroups;
+        }
     }
 
+    /// <summary>
+    /// Library of helpers for simulating a Fano Plane set.
+    /// </summary>
     public static class FanoPlane
     {
+        /// <summary>
+        /// Generates a collection of seven 3-member groups representing a Fano Plane.
+        /// </summary>
+        /// <returns>List of a List of string.</returns>
         public static List<List<string>> GenerateCollection()
         {
             string[] members = new string[7]
             {
                 "1,2,3",
-                "1,5,4",
+                "1,4,5",
                 "1,6,7",
-                "2,5,7",
                 "2,4,6",
-                "3,5,6",
-                "3,4,7"
+                "2,5,7",
+                "3,4,7",
+                "3,5,6"
             };
 
             List<List<string>> fanoMembers = members.Select(member => member.Split(',')).Select(digits => digits.ToList()).ToList();
 
             return fanoMembers;
-        }
-
-        public static List<List<List<string>>> FanoOriginPermutation()
-        {
-            Permutations permutations = new Permutations();
-            List<List<string>> originMembers = PermutationAs3SetsOf3();
-            List<List<List<string>>> resultingMembers = new List<List<List<string>>>();
-            for (int i = 0; i < originMembers.Count; i++)
-            {
-                List<List<string>> nonIs = originMembers.Where(x => x != originMembers[i]).ToList();
-                List<List<string>> memberPermutations = permutations.GeneratePermutations(originMembers[i]);
-                foreach (List<string> memberPerm in memberPermutations)
-                {
-                    List<List<string>> thisMembers = new List<List<string>>(3);
-                    switch (i)
-                    {
-                        case 0:
-                            thisMembers.Insert(0, memberPerm);
-                            thisMembers.AddRange(nonIs);
-                            break;
-                        case 1:
-                            thisMembers.Add(nonIs.First());
-                            thisMembers.Add(memberPerm);
-                            thisMembers.Add(nonIs[1]);
-                            break;
-                        default:
-                            thisMembers.AddRange(nonIs);
-                            thisMembers.Add(memberPerm);
-                            break;
-                    }
-                    resultingMembers.Add(thisMembers);
-                }
-            }
-
-            return resultingMembers;
-        }
-
-        public static List<List<string>> PermutationAs3SetsOf3()
-        {
-            string[] members = new string[3]
-            {
-                "1,2,3",
-                "3,4,5",
-                "5,6,7"
-            };
-
-            List<List<string>> permMembers =
-                members.Select(member => member.Split(',')).Select(digits => digits.ToList()).ToList();
-
-            return permMembers;
         }
     }
 
@@ -209,7 +193,7 @@ namespace CS271.Automorphisms.Console
     //    {
     //        var mapping = new Dictionary<int, string>();
 
-    //        for(int i = 0; i < originalPermutation.Count; i++)
+    //        for (int i = 0; i < originalPermutation.Count; i++)
     //        {
     //            mapping.Add(i, originalPermutation[i]);
     //        }
@@ -244,7 +228,6 @@ namespace CS271.Automorphisms.Console
     //                    key = null;
     //                }
     //            }
-
 
     //        }
 

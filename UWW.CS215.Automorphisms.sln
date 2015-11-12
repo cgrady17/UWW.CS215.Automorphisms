@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS271.Automorphisms.Console", "CS271.Automorphisms.Console\CS271.Automorphisms.Console.csproj", "{680D8E6D-7758-4309-B721-371D841407F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UWW.CS215.Automorphisms.Console", "CS271.Automorphisms.Console\UWW.CS215.Automorphisms.Console.csproj", "{680D8E6D-7758-4309-B721-371D841407F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
