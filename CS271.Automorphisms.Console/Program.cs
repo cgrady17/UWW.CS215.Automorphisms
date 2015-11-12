@@ -104,9 +104,9 @@ namespace UWW.CS215.Automorphisms.Console
         private static string CollectInput()
         {
             // Ask for the list
-            System.Console.WriteLine("Select what you would like to ouput:");
+            System.Console.WriteLine(Environment.NewLine + "Select what you would like to ouput:");
             System.Console.WriteLine("A) Permutations of a Fano Plane Collection (1,2,3,4,5,6,7)");
-            System.Console.WriteLine("B) Automorphisms of the Permutation of a Fano Plane Collection");
+            System.Console.WriteLine("B) Automorphisms of the Permutations of a Fano Plane Collection");
             System.Console.WriteLine("Exit) Stop and exit the Program.");
             System.Console.Write("Your choice: ");
             // Collect the input
@@ -192,7 +192,7 @@ namespace UWW.CS215.Automorphisms.Console
             if (input != "Y") return;
 
             lines.Insert(0, "UWW CS215 Automorphism Finder | " + outputType + " Output | Generated: " + DateTime.Now);
-            lines.Add(Environment.NewLine + "Number of " + outputType + ": " + lines.Count);
+            lines.Add(Environment.NewLine + "Number of " + outputType + ": " + (lines.Count - 1));
             // Save to local file
             File.Delete("Output.txt");
             File.WriteAllLines("Output.txt", lines);

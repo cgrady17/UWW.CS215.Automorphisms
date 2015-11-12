@@ -87,16 +87,18 @@ namespace UWW.CS215.Automorphisms.Console
         /// <returns>String representing the cycle notation of the specified permutation.</returns>
         public string ToCycleNotation(List<string> origin, List<string> permutation)
         {
+            return string.Join("", permutation);
+
             //throw new NotImplementedException();
 
-            StringBuilder cycleStringBuilder = new StringBuilder("(");
+            //StringBuilder cycleStringBuilder = new StringBuilder("(");
 
             // Generate Cycles and append to cycleStringBuilder
-            cycleStringBuilder.Append(string.Join("", permutation));
+            //cycleStringBuilder.Append(string.Join("", permutation));
 
-            cycleStringBuilder.Append(")");
+            //cycleStringBuilder.Append(")");
 
-            return cycleStringBuilder.ToString();
+            //return cycleStringBuilder.ToString();
         }
 
         /// <summary>
