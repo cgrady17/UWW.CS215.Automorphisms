@@ -87,18 +87,39 @@ namespace UWW.CS215.Automorphisms.Console
         /// <returns>String representing the cycle notation of the specified permutation.</returns>
         public string ToCycleNotation(List<string> origin, List<string> permutation)
         {
-            return string.Join("", permutation);
+            //return string.Join("", permutation);
 
-            //throw new NotImplementedException();
+            StringBuilder cycleStringBuilder = new StringBuilder("(");
 
-            //StringBuilder cycleStringBuilder = new StringBuilder("(");
-
-            // Generate Cycles and append to cycleStringBuilder
+            //Generate Cycles and append to cycleStringBuilder
             //cycleStringBuilder.Append(string.Join("", permutation));
 
-            //cycleStringBuilder.Append(")");
+            if (origin == permutation)
+            {
+                cycleStringBuilder.Append("1");
+            }
+            else
+            {
+                // For each character in the permutation
+                for (int i = 0; i < origin.Count; i++)
+                {
+                    // What's the char's index in the origin
+                    int indexInPerm = permutation.IndexOf(origin[i]);
+                    if (i == indexInPerm || cycleStringBuilder.ToString().Contains(origin[i])) continue;
+                    if (origin[0] == permutation[i])
+                    {
+                        cycleStringBuilder.Append(" " + permutation[i] + ") (");
+                        continue;
+                    }
 
-            //return cycleStringBuilder.ToString();
+                    cycleStringBuilder.Append((cycleStringBuilder.ToString().EndsWith("(") ? "" : " ") + origin[i] + " " + permutation[i]);
+                }
+            }
+
+            // Append closing parenthesis
+            cycleStringBuilder.Append(")").Replace(" ()", "");
+
+            return cycleStringBuilder.ToString();
         }
 
         /// <summary>

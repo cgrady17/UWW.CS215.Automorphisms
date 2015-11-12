@@ -43,7 +43,7 @@ namespace UWW.CS215.Automorphisms.Console
                         List<string> automorphicCycles = automorphisms.Select(perm => permutations.ToCycleNotation(results.FirstOrDefault(), perm)).ToList();
 
                         // Write cycles to the Console
-                        WriteCycles(automorphicCycles);
+                        WriteCycles(automorphicCycles, automorphisms.Select(auto => string.Join("", auto)).ToList());
                         break;
 
                     default:
@@ -156,7 +156,8 @@ namespace UWW.CS215.Automorphisms.Console
         /// Writes all cycles in the specified collection to the Console.
         /// </summary>
         /// <param name="cycles">The list of cycles as strings to write.</param>
-        private static void WriteCycles(IList<string> cycles)
+        /// /// <param name="linearNotation">Collection of lines representing the automorphisms in linear notation.</param>
+        private static void WriteCycles(List<string> cycles, IReadOnlyCollection<string> linearNotation)
         {
             foreach (string cycle in cycles)
             {
@@ -165,7 +166,7 @@ namespace UWW.CS215.Automorphisms.Console
 
             System.Console.WriteLine(Environment.NewLine + "Number of Cycles: " + cycles.Count);
 
-            SaveCollectionToFile(cycles, "Automorphisms");
+            SaveCollectionToFile(cycles, "Automorphisms", linearNotation);
         }
 
         /// <summary>
@@ -173,7 +174,8 @@ namespace UWW.CS215.Automorphisms.Console
         /// </summary>
         /// <param name="lines">The collection of lines to output to a file.</param>
         /// <param name="outputType">The type of the collection of lines (i.e. Permutations or Automorphisms)</param>
-        private static void SaveCollectionToFile(IList<string> lines, string outputType)
+        /// <param name="linearNotation">Collection of lines representing the automorphisms in linear notation.</param>
+        private static void SaveCollectionToFile(List<string> lines, string outputType, IReadOnlyCollection<string> linearNotation = null)
         {
             System.Console.Write(Environment.NewLine + "Would you like to write the previous output to a file? (Y or N) ");
             string input = System.Console.ReadLine();
@@ -195,6 +197,11 @@ namespace UWW.CS215.Automorphisms.Console
             lines.Add(Environment.NewLine + "Number of " + outputType + ": " + (lines.Count - 1));
             // Save to local file
             File.Delete("Output.txt");
+            if (linearNotation != null && linearNotation.Count > 0)
+            {
+                lines.Add(Environment.NewLine + "LINEAR NOTATION" + Environment.NewLine);
+                lines.AddRange(linearNotation);
+            }
             File.WriteAllLines("Output.txt", lines);
 
             System.Console.WriteLine("SUCCESS! Output saved to \"Output.txt\" at same location as this Program.");
